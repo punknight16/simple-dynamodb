@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Entry Page</title>
+		<script async src="./_static/build/amazon-cognito-identity.min.js"></script>
+	</head>
+	<body>
+			<main>
+				<form id="registerForm">
+					<fieldset style='display: flex; flex-direction: column; width: fit-content;'>
+						<legend>Register</legend>
+						<input id="registerEmailInp" type='email' size='24' placeholder="email" />
+						<input id="registerPassInp" type='password' size='24' placeholder="password" /> 
+						<input type='submit' value="Register" />
+					</fieldset>
+				</form>
+				<form id="verifyForm">
+					<fieldset style='display: flex; flex-direction: column; width: fit-content;'>
+						<legend>Verify Email</legend>
+						<input id="verifyEmailInp" type='email' size='24' placeholder="email" />
+						<input id="verifyCodeInp" type='text' size='24' placeholder="code" /> 
+						<input type='submit' value="Verify" />
+					</fieldset>
+				</form>
+
+				<form id="loginForm">
+					<fieldset style='display: flex; flex-direction: column; width: fit-content;'>
+						<legend>Login</legend>
+						<input id="loginEmailInp" type='email' size='24' placeholder="email" />
+						<input id="loginPassInp" type='password' size='24' placeholder="password" /> 
+						<input type='submit' value="Login" />
+					</fieldset>
+				</form>
+				<script async src='./_static/js/initialize-cognito.js' type='text/javascript'></script>
+				<script async src='./_static/js/entry-ui.js' type='text/javascript'></script>
+			</main>
+
+	</body>
+</html>

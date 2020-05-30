@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script async src="./_static/build/amazon-cognito-identity.min.js"></script>
+  <script async src="./_static/build/aws-sdk.min.js"></script>
+</head>
+
+<body>
+  <input id="createItem" type="button" value="Create Item" onclick="createItem();" />
+  <br><br>
+  <textarea readonly id= "textarea" style="width:400px; height:800px"></textarea>
+
+<!--<script src='./_static/js/initialize-cognito.js' type='text/javascript'></script>-->
+<!--<script src='./_static/js/initialize-dynamodb.js' type='text/javascript'></script>-->
+  <!--<script async src='./_static/js/home-ui.js' type='text/javascript'></script>-->
+  <script>
+    window.onload = function(){
+    var data = {
+  UserPoolId: 'us-west-2_Q2jEhB2TV',
+  ClientId: '3hptgljmvc1ff2uj3ougb0a574',
+};
+var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+var cognitoUser = userPool.getCurrentUser();
+
+try {
+  if (cognitoUser != null) {
+    cognitoUser.getSession(function(err, session) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      console.log('session validity: ' + session.isValid());
+      console.log('session token: ' + session.getIdToken().getJwtToken());
+
+      AWS.config.region = 'us-west-2';
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId : 'us-west-2:883f319d-60a0-4f12-8d99-1f8b2e106a33', 
+        Logins : {
+          // Change the key below according to the specific region your user pool is in.
+          'cognito-idp.us-west-2.amazonaws.com/us-west-2_Q2jEhB2TV' : session.getIdToken().getJwtToken()
+        }
+      });
+
+      AWS.config.credentials.get(function(err) {
+        if (!err) {
+          var id = AWS.config.credentials.identityId;
+          console.log('Cognito Identity ID '+ id);
+
+          // Instantiate aws sdk service objects now that the credentials have been updated
+          var docClient = new AWS.DynamoDB.DocumentClient({ region: AWS.config.region });
+          var params = {
+            TableName: 'SimpleTable',
+            Item:{EmailAddr:id, status:"success"}
+          };
+          docClient.put(params, function(err, data) {
+            if (err) 
+        console.error(err);
+            else 
+        console.log(data);
+          });
+        }
+      });
+    });
+  } else {
+    console.log(err);
+    //return;
+  }
+} catch (e) {
+  console.log(e);
+}
+}
+  </script>
+</body>
+</html> 
